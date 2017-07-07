@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="moment.js"></script>
+	<script src="moment-timezone.min.js"></script>
+	<script>
+		let stamparr = [1499248800,1499263200,1499299200,1499306400,1499320800,1499335200,1499349600];
+		let momentarr = [];
+		let obj = {};
+		let alldate = ['2017-07-05','2017-07-06'];
+		for (let i = 0; i < stamparr.length; i++) {
+			momentarr.push(moment.unix(stamparr[i]));
+			// console.log(momentarr);
+		}
+		for(let x = 0; x< alldate.length; x++) {
+		let specarr = []; //在vue中的selectperiod函数中一开始就要let specarr = []; 因为selectperiod函数每次传入的alldate参数都不同
+			for (let j = 0; j < momentarr.length; j++) {
+				// console.log(alldate[x]);
+				if(momentarr[j].format('YYYY-MM-DD') === alldate[x]) {
+					specarr.push(stamparr[j]);
+					// console.log(specarr);
+					obj[alldate[x]] = specarr;
+					
+				}
+				
+			}
+		}
+
+		let maxlen = 0;
+
+		for(let i in obj) {
+			maxlen = obj[i].length;
+			if(obj[i].length>=maxlen) {
+				maxlen = obj[i].length;
+			}
+		}
+		// console.log(maxlen);
+		// console.log(obj);
+		for(let q in obj) {
+			if(obj[q].length < maxlen) {  //这种情况只能在显示列表的第一天和最后一天出现
+				const len = maxlen - obj[q].length;
+				for (let y = 0; y < stamparr.length; y++) {
+					if(stamparr[y] === obj[q][0]) {
+						if(y === 0) {   //是在显示列表的第一天
+							console.log(y);
+							for (let i = len; i > 0; i--) {
+								obj[q].unshift((stamparr[y+i] - 24 * 3600));
+							}
+					} else {  //是在显示列表的最后一天
+						for (let j = len; j > 0; j--) {
+								obj[q].push((stamparr[y-j] + 24 * 3600));
+							}
+					}
+					
+				}
+			}
+			// console.log(obj[q]);  //vue中直接在这里return obj[q];
+		}
+
+		// console.log(obj);
+		// console.log(obj);
+	</script>
+</head>
+<body>
+	
+</body>
+</html>
